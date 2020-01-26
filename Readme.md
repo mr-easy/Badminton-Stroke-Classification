@@ -1,8 +1,7 @@
-
 # BADMINTON STROKE CLASSIFICATION
 ### AN END TO END MACHINE LEARNING PROJECT
 
-This project is on classifying the type of badminton stroke player played using the data collected from a small wrist device. This device gives us accelorometer and gyroscope data and is attached to the player's wrist. This project was part of Data Analytics course we did at IISc. And it involved everything from data collection, cleaning up till the final ML model evaluation.
+This project is on classifying the type of badminton stroke player played using the data collected from a small wrist device. This device gives us accelerometer and gyroscope data and is attached to the player's wrist. This project was part of Data Analytics course we did at IISc. And it involved everything from data collection, cleaning up till the final ML model evaluation.
 
 This jupyter notebook explains "what we did?" and "how we did it?" (the code).
 
@@ -21,7 +20,7 @@ The 2 letter in parenthesis are abbreviations of the strokes, which we'll be usi
 As per our knowledge, there was no publicly available data for this problem. There have been some research papers, but we couldn't get our hands on the data. So we decided to collect it ourselves (Why not? Can give it a try).
 
 ### Setup for collecting data
-We got hold on a device which can give us accelorometer and gyroscope readings over a period of time at a descent frequency. The device was powered by a small cell and connected via bluetooth low energy (BLE) to a rasperry pi. So we collected our data on rasperry pi in csv formats.
+We got hold on a device which can give us accelerometer and gyroscope readings over a period of time at a descent frequency. The device was powered by a small cell and connected via bluetooth low energy (BLE) to a rasperry pi. So we collected our data on rasperry pi in csv formats.
 
 ### Collecting data
 Thanks to our 5 volunteers, we collected the data for the 5 mentioned strokes by making them repeatedly play the same shot. Although this might be very different than a real game, but we tried to make them play as they are playing a real game, (i.e. starting from center position, going towards the shuttle cock and returning back to resting position). The device had it's own limitation (coverage, power, etc) which made it challenging. Going through all of this we finally got our data.
@@ -46,7 +45,7 @@ import pickle
 
 The data is saved in the data folder. We have 25 different csv files, for 5 players, 5 classes each. The naming convention is playerid_strokename. e.g. p2_bu.csv file contains data of player id 2 for "backhand underarm".
 
-The columns in each file are: timestamp, accelorometer x-axis (ax), y-axis (ay), z-axis (az), gyroscope x-axis (gx), y-axis (gy), z-axis (gz). We also added magnitudes of accelerometer and gyroscope.
+The columns in each file are: timestamp, accelerometer x-axis (ax), y-axis (ay), z-axis (az), gyroscope x-axis (gx), y-axis (gy), z-axis (gz). We also added magnitudes of accelerometer and gyroscope.
 
 
 ```python
@@ -96,7 +95,7 @@ plt.show()
 
 The peaks in the above plot are the shots, and in between we have some rest times. The shots are not at uniform intervals, sometimes the rest period is very long (as in between 160 and 200 in above plot). So we need to extract out shots from this continous plot and remove all these players' resting periods. 
 
-The approach we took was to take a window around the peaks in the signal. Many design decisions were to be made, like, should the window by dynamic or fixed? If fixed, window size? peaks in which signal, accelorometer or gyroscope, x or y or z? one signal or many signals? how to consider some spike as peak? any thresholding? any noise reduction algorithm?
+The approach we took was to take a window around the peaks in the signal. Many design decisions were to be made, like, should the window by dynamic or fixed? If fixed, window size? peaks in which signal, accelerometer or gyroscope, x or y or z? one signal or many signals? how to consider some spike as peak? any thresholding? any noise reduction algorithm?
 
 We did some EDA by plotting all the data and chose a window size of 13. This was our choice by our observations. And we chose the ay-signal to consider for extracting peaks and window, with different threshold values for each class of stroke.
 
@@ -166,7 +165,7 @@ for p_name in persons:
         # Set figure width as per the number of readings
         plt.figure(figsize=(len(data[plotName])/10, 5), dpi=100)
 
-        plt.plot(data[plotName][addedCols[0]], label="Magnitude Accelorometer")
+        plt.plot(data[plotName][addedCols[0]], label="Magnitude Accelerometer")
 
         # drawing windows around each peak
         for peak in peaks:
@@ -202,7 +201,7 @@ for p_name in persons:
 
 Now this is what our extracted shots look like. 
 
-Accelorometer:
+Accelerometer:
 <img src="plots/p5_bu_acc.png">
 
 Gyroscope:
@@ -816,7 +815,7 @@ for sensor in cols + addedCols:
     Added feature range_gz for 708 rows.
     Added feature range_acc_mag for 708 rows.
     Added feature range_gyro_mag for 708 rows.
-
+    
 
 
 ```python
@@ -835,7 +834,7 @@ for sensor in cols + addedCols:
     Added feature min_gz for 708 rows.
     Added feature min_acc_mag for 708 rows.
     Added feature min_gyro_mag for 708 rows.
-
+    
 
 
 ```python
@@ -854,7 +853,7 @@ for sensor in cols + addedCols:
     Added feature max_gz for 708 rows.
     Added feature max_acc_mag for 708 rows.
     Added feature max_gyro_mag for 708 rows.
-
+    
 
 
 ```python
@@ -873,7 +872,7 @@ for sensor in cols + addedCols:
     Added feature avg_gz for 708 rows.
     Added feature avg_acc_mag for 708 rows.
     Added feature avg_gyro_mag for 708 rows.
-
+    
 
 
 ```python
@@ -892,7 +891,7 @@ for sensor in cols + addedCols:
     Added feature absavg_gz for 708 rows.
     Added feature absavg_acc_mag for 708 rows.
     Added feature absavg_gyro_mag for 708 rows.
-
+    
 
 
 ```python
@@ -912,7 +911,7 @@ for sensor in cols + addedCols:
     Added feature kurtosis_f_gz for 708 rows.
     Added feature kurtosis_f_acc_mag for 708 rows.
     Added feature kurtosis_f_gyro_mag for 708 rows.
-
+    
 
 
 ```python
@@ -932,7 +931,7 @@ for sensor in cols + addedCols:
     Added feature kurtosis_p_gz for 708 rows.
     Added feature kurtosis_p_acc_mag for 708 rows.
     Added feature kurtosis_p_gyro_mag for 708 rows.
-
+    
 
 
 ```python
@@ -955,7 +954,7 @@ for sensor in cols + addedCols:
     Added feature skewness_statistic_gz for 708 rows.
     Added feature skewness_statistic_acc_mag for 708 rows.
     Added feature skewness_statistic_gyro_mag for 708 rows.
-
+    
 
 
 ```python
@@ -975,7 +974,7 @@ for sensor in cols + addedCols:
     Added feature skewness_pvalue_gz for 708 rows.
     Added feature skewness_pvalue_acc_mag for 708 rows.
     Added feature skewness_pvalue_gyro_mag for 708 rows.
-
+    
 
 
 ```python
@@ -990,7 +989,7 @@ for sensor in addedCols:
 
     Added feature entropy_acc_mag for 708 rows.
     Added feature entropy_gyro_mag for 708 rows.
-
+    
 
 
 ```python
@@ -1009,7 +1008,7 @@ for sensor in cols + addedCols:
     Added feature std_gz for 708 rows.
     Added feature std_acc_mag for 708 rows.
     Added feature std_gyro_mag for 708 rows.
-
+    
 
 
 ```python
@@ -1034,7 +1033,7 @@ add_feature_mult_sensor(anglebetween_, ["gx", "gz"])
     Added feature anglebetween_gx_gy for 708 rows.
     Added feature anglebetween_gy_gz for 708 rows.
     Added feature anglebetween_gx_gz for 708 rows.
-
+    
 
 
 ```python
@@ -1054,7 +1053,7 @@ for sensor in cols + addedCols:
     Added feature iqr_gz for 708 rows.
     Added feature iqr_acc_mag for 708 rows.
     Added feature iqr_gyro_mag for 708 rows.
-
+    
 
 
 ```python
@@ -1073,7 +1072,7 @@ for sensor in cols + addedCols:
     Added feature maxmin_relative_pos_gz for 708 rows.
     Added feature maxmin_relative_pos_acc_mag for 708 rows.
     Added feature maxmin_relative_pos_gyro_mag for 708 rows.
-
+    
 
 ### Saving the processed data
 
@@ -8117,19 +8116,19 @@ print(classification_report)
 ```
 
     Fitting 3 folds for each of 12 candidates, totalling 36 fits
-
+    
 
     [Parallel(n_jobs=8)]: Using backend LokyBackend with 8 concurrent workers.
     [Parallel(n_jobs=8)]: Done  21 out of  36 | elapsed:    2.7s remaining:    1.9s
     [Parallel(n_jobs=8)]: Done  36 out of  36 | elapsed:   11.3s finished
     /home/easy/anaconda3/lib/python3.7/site-packages/sklearn/model_selection/_search.py:813: DeprecationWarning: The default of the `iid` parameter will change from True to False in version 0.22 and will be removed in 0.24. This will change numeric results when test-set sizes are unequal.
       DeprecationWarning)
-
+    
 
     Accuracy of strokes detection:   0.7535211267605634
     
     
-
+    
 
 
 ![png](output_47_3.png)
@@ -8148,7 +8147,7 @@ print(classification_report)
        macro avg       0.75      0.77      0.76       142
     weighted avg       0.76      0.75      0.75       142
     
-
+    
 
 ### K- Nearest Neighbours
 
@@ -8184,7 +8183,7 @@ print(classification_report)
     Accuracy of strokes detection:   0.6197183098591549
     
     
-
+    
 
 
 ![png](output_49_1.png)
@@ -8203,7 +8202,7 @@ print(classification_report)
        macro avg       0.65      0.62      0.63       142
     weighted avg       0.63      0.62      0.62       142
     
-
+    
 
 ### Linear SVC
 
@@ -8237,7 +8236,7 @@ print(classification_report)
 ```
 
     Fitting 3 folds for each of 6 candidates, totalling 18 fits
-
+    
 
     [Parallel(n_jobs=8)]: Using backend LokyBackend with 8 concurrent workers.
     [Parallel(n_jobs=8)]: Done  18 out of  18 | elapsed:    1.2s finished
@@ -8245,12 +8244,12 @@ print(classification_report)
       DeprecationWarning)
     /home/easy/anaconda3/lib/python3.7/site-packages/sklearn/svm/base.py:929: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
       "the number of iterations.", ConvergenceWarning)
-
+    
 
     Accuracy of strokes detection:   0.6901408450704225
     
     
-
+    
 
 
 ![png](output_51_3.png)
@@ -8269,7 +8268,7 @@ print(classification_report)
        macro avg       0.73      0.71      0.68       142
     weighted avg       0.74      0.69      0.67       142
     
-
+    
 
 ### SVC with RBF kernel
 
@@ -8305,7 +8304,7 @@ print(classification_report)
     Accuracy of strokes detection:   0.30985915492957744
     
     
-
+    
 
 
 ![png](output_53_1.png)
@@ -8324,11 +8323,11 @@ print(classification_report)
        macro avg       0.46      0.22      0.13       142
     weighted avg       0.37      0.31      0.16       142
     
-
+    
 
     /home/easy/anaconda3/lib/python3.7/site-packages/sklearn/metrics/classification.py:1437: UndefinedMetricWarning: Precision and F-score are ill-defined and being set to 0.0 in labels with no predicted samples.
       'precision', 'predicted', average, warn_for)
-
+    
 
 
 ```python
@@ -8361,12 +8360,12 @@ print(classification_report)
 
     /home/easy/anaconda3/lib/python3.7/site-packages/sklearn/model_selection/_search.py:813: DeprecationWarning: The default of the `iid` parameter will change from True to False in version 0.22 and will be removed in 0.24. This will change numeric results when test-set sizes are unequal.
       DeprecationWarning)
-
+    
 
     Accuracy of strokes detection:   0.6690140845070423
     
     
-
+    
 
 
 ![png](output_54_2.png)
@@ -8385,7 +8384,7 @@ print(classification_report)
        macro avg       0.66      0.68      0.66       142
     weighted avg       0.68      0.67      0.66       142
     
-
+    
 
 ### Random Forest
 
@@ -8422,7 +8421,7 @@ print(classification_report)
     Accuracy of strokes detection:   0.7816901408450704
     
     
-
+    
 
 
 ![png](output_56_1.png)
@@ -8441,7 +8440,7 @@ print(classification_report)
        macro avg       0.79      0.79      0.79       142
     weighted avg       0.79      0.78      0.78       142
     
-
+    
 
 ### Gradient Boosting
 
@@ -8477,12 +8476,12 @@ print(classification_report)
 
     /home/easy/anaconda3/lib/python3.7/site-packages/sklearn/model_selection/_search.py:813: DeprecationWarning: The default of the `iid` parameter will change from True to False in version 0.22 and will be removed in 0.24. This will change numeric results when test-set sizes are unequal.
       DeprecationWarning)
-
+    
 
     Accuracy of strokes detection:   0.7183098591549296
     
     
-
+    
 
 
 ![png](output_58_2.png)
@@ -8501,7 +8500,7 @@ print(classification_report)
        macro avg       0.73      0.75      0.73       142
     weighted avg       0.74      0.72      0.72       142
     
-
+    
 
 ## Deep Learning Models
 
@@ -8526,7 +8525,7 @@ from keras.layers.core import Dense, Dropout
 ```
 
     Using TensorFlow backend.
-
+    
 
 
 ```python
@@ -8605,7 +8604,7 @@ model.summary()
     Trainable params: 5,157
     Non-trainable params: 0
     _________________________________________________________________
-
+    
 
 
 ```python
@@ -8825,7 +8824,7 @@ model.fit(X_train, Y_train,
     637/637 [==============================] - 2s 3ms/step - loss: 0.5363 - accuracy: 0.8257 - val_loss: 0.8965 - val_accuracy: 0.6338
     Epoch 100/100
     637/637 [==============================] - 2s 3ms/step - loss: 0.6074 - accuracy: 0.7771 - val_loss: 0.9183 - val_accuracy: 0.6338
-
+    
 
 
 
